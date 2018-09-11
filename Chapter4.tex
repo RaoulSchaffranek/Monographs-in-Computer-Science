@@ -1,0 +1,180 @@
+\documentclass{article}[12pt]
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\title{Focus Tutorial Chapter 4 Exercises}
+\author{Raoul Schaffranek}
+\date{September 11, 2018}
+
+\newcommand{\concat}{\ensuremath{^{\frown}}}
+\newcommand{\stuterringremoval}{\ensuremath{\propto}}
+\newcommand{\cons}{\ \&\ }
+\newcommand{\stream}[1]{\langle#1\rangle}
+\newcommand{\naturals}{\ensuremath{\mathbb{N}}}
+\newcommand{\prefixordering}{\ensuremath{\sqsubseteq}}
+\newcommand{\length}{\ensuremath{\#}}
+\newcommand{\filter}{\ \ensuremath{\text{\textcircled{s}}}\ }
+\newcommand{\rt}{\ensuremath{\textbf{rt}}}
+\newcommand{\tm}{\ensuremath{\textbf{tm}}}
+\newcommand{\ts}{\ensuremath{\textbf{ts}}}
+\newcommand{\rng}{\ensuremath{\textbf{rng}}}
+\newcommand{\dom}{\ensuremath{\textbf{dom}}}
+\newcommand{\map}{\ensuremath{\textbf{map}}}
+\begin{document}
+   \maketitle
+   \section{Exercise 4.1}
+   For which stream $s$ do we have that $\dom.s = \{\}$?
+   \paragraph{Solution}{
+       Let $s \in M^{\omega}$ be an untimed steam.
+
+       Then $\dom.s = \{\}$ if and only if $s = \stream{}$.
+
+       By contradiction, assume $\exists m \in M. s(0) = m$
+
+       then $m \in \dom.s$, thus $\dom.s \neq \{\}$
+
+       Now, let $s \in M^{\underline{\omega}}$ be a timed stream.
+
+       Then $\dom.s = \{\}$ if and only if $s = \stream{}$.
+
+       By contradiction, assume $\exists m \in M \cup \{\checkmark\} . s(0) = m$
+
+       then $m \in \dom.s$, thus $\dom.s \neq \{\}$.
+   }
+   \section{Exercise 4.2}
+   If $s \concat r = r$ for streams $s$ and $r$, what can we conclude about $s$ and $r$?
+   \paragraph{Solution}{
+       Let $s, r \in M^{\omega}$ be untimed streams.
+
+       \begin{enumerate}
+           \item{
+            We observe that $s = \stream{}$ satsfies the proposition for every $r \in M^{\omega}$, becaucse $s \concat r = \stream{} \concat r = r$.
+           }
+           \item{
+            If the proposition holds and $s \in M^{*}$ then $\forall n \in \naturals . s^n \prefixordering r$. 
+            We know that $s \concat r \prefixordering r$ because $s \concat r = r$ and $\prefixordering$ is reflexive.
+            We can generalize this observation to iterated streams of $s$ like follows:
+            $\forall n \in \naturals . {s^n} \concat r \prefixordering r$ and therefore $\forall n \in \naturals . {s^n} \prefixordering r$
+           }
+           \item{
+            Furthermore, we observe that if the proposition holds, we know that $s \notin M^{\infty}$ and $s \neq r$ cannot hold in conjunction.
+
+            By the definition of $\concat$ we have $s \concat r = s$ for all $r \in M^{\omega}$ and $r \neq s$ by assumption.
+           }
+           \item {
+               Corollary: $s \in M^{\infty} \Rightarrow s = r$.
+           }
+       \end{enumerate}
+
+       The same observations can be made for timed streams, with the analagous proves.
+
+   }
+   \section{Exercise 4.3}
+   What is the length of the stream $\stream{1,2}^{3}$?
+
+   \paragraph{Solution}{
+       $\length \stream{1,2}^3 = \length(\stream{1,2} \concat \stream{1,2} \concat \stream{1,2}) = \length \stream{1,2,1,2,1,2} = 6$.
+    }
+   \section{Exercise 4.4}
+   Which stream $s \in \naturals^{\omega}$ fulfills the equation $s = 1 \cons s$?
+   \paragraph{Solution}{
+       The stream $s \in \naturals^{\infty}$ with $\dom.s = \{1\}$.
+       We show that $s$ is the only fixed point of the equation.
+       First, observe that $s$ is indeed a fixed point, because $s \cons 1 = s$ holds.
+       Moreover, $s$ is the only fixed point. By contraction, assume there was another
+       fixed point $s'$ with $s' \neq s$. Then $s'$ is either finite, in which case
+       $s'$ does not satisfy $s' = 1 \cons s'$. Or $s$ and $s'$ disagree on some message, i.e $\exists n \in \naturals . s'(n) \neq s(n) = 1$. Again, $s'$ does not satisfy the equation.
+   }
+   \section{Exercise 4.5}
+   What can we conclude about a stream $s$ for which $\rt.s = s$?
+   \paragraph{Solution}{
+       Either $s = \stream{}$ or $s \in M^{\infty}$ and $\exists m \in M.\forall n \in \naturals.s(n) = m$.
+       For the first case, we have $\rt.\stream{} = \stream{}$ by definition.
+       Now, assume $s \neq \stream{}$.
+       If $s$ was finite, then clearly $\length \rt.s \neq \length s$, hence $\rt.s \neq s$.
+       Thus, if $s$ is not empty it must be infinite. Moreover, the domain of $s$ must be a singelton-set.
+       Assume otherwise, i.e. $\exists m. \land s(m) \neq s(m+1)$. For every such $m$ we than have $\rt.s(m+1) \neq s(m+1)$,
+       thus $\rt.s \neq s$.
+   }
+   \section{Exercise 4.6}
+   Prove that the following propositions holds.\\
+   $r \prefixordering s \Rightarrow t \concat r \prefixordering t \concat s$
+   \paragraph{Solution}{
+       By induction on the length of $t$.
+       If $t = \stream{}$, we have $\stream{} \concat r \prefixordering \stream{} \concat s$
+       and thus $r \prefixordering s$ because $\stream{}$ is left-neutral with respect to $\concat$.
+       If $\length t = \infty$, we have $t \concat r \prefixordering t \concat s$ which simplifies to
+       $t \prefixordering t$, which holds because $\prefixordering$ is reflexive.
+       Now, assume that $r \prefixordering s \Rightarrow t \concat r \prefixordering t \concat s$ holds
+       for streams $t$ of some fixed length. We need to show $(m \cons t) \concat r \prefixordering (m \cons t) \concat s$. By definition of $\cons$ we obtain $(\stream{m} \concat t) \concat r \prefixordering (\stream{m} \concat t) \concat s$, and because $\concat$ is associative we further have $\stream{m} \concat (t \concat r) \prefixordering \stream{m} \concat (t \concat s)$. We can now apply the indution hypothesis proving the proposition.
+   }
+   \section{Exercise 4.7}
+   A function $f \in M^{\omega} \rightarrow M^{\omega}$ on streams is called prefix monotonic, if for all streams $r$ and $s$: $r \prefixordering s \Rightarrow f(r) \prefixordering f(s)$\\
+   Show that the operator $\rt$ is prefix monotonic.
+    \paragraph{Solution} Assume the premise $r \prefixordering s$ holds. We show the conclusion by induction over the lenght of $s$.
+    \begin{itemize}
+        \item {Case: $s = \stream{}$.\\
+            Then, $r = \stream{}$ because its the only prefix of $s$.\\
+            Thus, $\rt.r = \stream{} \prefixordering \rt.s$ follows directly, because the empty stream is a prefix of every stream.
+        }
+        \item { Case: $s = m \cons t$ for some message $m$ and stream $t$.\\
+            Then, $\rt.s = t$. By induction over the length of $r$.
+            \begin{itemize}
+                \item { Case: $r = \stream{}$.\\
+                    Then $\rt.r = \stream{} \prefixordering \rt.s$, because the empty stream is a prefix of every stream.
+                }
+                \item { Case: $r = n \cons u$ for some message $n$ and stream $u$.\\
+                    Then, $\rt.r = u$.
+                    Thus, $r \prefixordering s \Rightarrow u \prefixordering t \Rightarrow \rt.r \prefixordering \rt.s$.
+                }
+            \end{itemize}
+        }
+    \end{itemize}
+   \section{Exercise 4.8}
+   Given the stream $r$ such that $r = \stream{1,2} \concat r$
+   \begin{enumerate}
+        \item prove that $\length r = \infty$
+        \item describe the streams denoted by: $\{1\} \filter r$, $r|_{5}$, $\stuterringremoval r$, $\map(r, g)$\\
+        where $g \in \naturals \rightarrow \naturals$ is defined as $g(n) = \text{ if } odd(n) \text{ then } 1 \text{ else } 2 \text{ fi }$
+   \end{enumerate}
+    \paragraph{Solution 1}{
+        Assume, $\length r \neq \infty$. Then, $\length(\stream{1,2} \concat r) = 2 + r \neq r$.
+        Thus, $r \ \neq \stream{1,2} \concat r$.
+    }
+    \paragraph{Solution 2}{
+        \begin{itemize}
+            \item $\{1\} \filter r$ is a possibly infinite stream with $\rng.s = \{1\}$.
+            \item $r|_5$ is a stream with $\length r = 5$ and $r|_5 \prefixordering r$.
+            \item $\stuterringremoval r$ is a stream with $\rng.(\stuterringremoval r) = \rng.r$,
+                $\dom.(\stuterringremoval r) = \dom.r$ and $\forall m \in \naturals. m < \length r \Rightarrow s(m) \neq s(m+1)$.
+            \item $\map(r,g)$ is a stream with $\forall n \in (\dom.r) . \map(r,g)(n) = g(n)$ and $\length r = \length \map(r,g)$. In natural language: if $m$ is the message of $r$ at position $n$, then the stream $\map(r,g)$ has a corresponding message at position $n$, that is $1$ if $m$ is odd and otherwise $2$. Moreover, both streams  have the same length.
+        \end{itemize}
+    }
+
+   \section{Exercise 4.9}
+   Given the timed stream $r$ such that $r = \stream{1,\checkmark,2}\concat r$\\
+   describe the elements denoty by: $\overline{r}, r\downarrow_{5}$, $\tm(r,5)$, $\ts(r)$
+   \paragraph{Solution}
+   \begin{enumerate}
+        \item $\overline{r}$ is the unique solution to the equation: $r' = \stream{1,2} \concat r'$.
+            In natural language: $\overline{r}$ is the untimed stream, that is like $r$ but with ticks $\checkmark$ removed, or in otherwords: $r$ alternates forever between messages $1$ and $2$.
+        \item $r\downarrow_{5}$ is $\stream{1,5,\checkmark,1,5,\checkmark,1,5,\checkmark,1,5,\checkmark,1,5,\checkmark}$
+        \item $\tm(r,5)$ is $3$
+        \item $\ts(r)$ is $False$ because $r$ is not time-synchrnonous.
+   \end{enumerate}
+   \section{Exercise 4.10}
+   Given the stream $r$ such that $r = \checkmark \cons r$\\
+   prove that $\overline{r} = \stream{}$
+   \paragraph{Solution}{
+       By contradiction, assume that $\overline{r} \neq \stream{}$.
+       Then $\overline{r}(0) = m$ for some $m \in \rng.r$ with $m \neq \checkmark$.
+       But then, the assumption $r = \checkmark \cons r$ is violated.
+    }
+   \section{Exercise 4.11}
+   Which streams $r \in M^{\underline{\infty}}$ fulfill the equation\\
+   $\overline{r} = \overline{\checkmark \cons r}$
+   \paragraph{Solution}{
+        Every stream $r$ fulfills the equation.
+        $\overline{\checkmark \cons r} = M \filter (\checkmark \cons r) = M \filter (\stream{\checkmark} \concat r) = (M \filter \stream{\checkmark}) \concat (M \filter r) = \stream{} \concat (M \filter r) = M \filter r = \overline{r}$.
+   }
+\end{document}
